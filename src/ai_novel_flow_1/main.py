@@ -1,56 +1,3 @@
-# #!/usr/bin/env python
-# from random import randint
-
-# from pydantic import BaseModel
-
-# from crewai.flow import Flow, listen, start
-
-# from ai_novel_flow_1.crews.poem_crew.poem_crew import PoemCrew
-
-
-# class PoemState(BaseModel):
-#     sentence_count: int = 1
-#     poem: str = ""
-
-
-# class PoemFlow(Flow[PoemState]):
-
-#     @start()
-#     def generate_sentence_count(self):
-#         print("Generating sentence count")
-#         self.state.sentence_count = randint(1, 5)
-
-#     @listen(generate_sentence_count)
-#     def generate_poem(self):
-#         print("Generating poem")
-#         result = (
-#             PoemCrew()
-#             .crew()
-#             .kickoff(inputs={"sentence_count": self.state.sentence_count})
-#         )
-
-#         print("Poem generated", result.raw)
-#         self.state.poem = result.raw
-
-#     @listen(generate_poem)
-#     def save_poem(self):
-#         print("Saving poem")
-#         with open("poem.txt", "w") as f:
-#             f.write(self.state.poem)
-
-
-# def kickoff():
-#     poem_flow = PoemFlow()
-#     poem_flow.kickoff()
-
-
-# def plot():
-#     poem_flow = PoemFlow()
-#     poem_flow.plot()
-
-
-# if __name__ == "__main__":
-#     kickoff()
 #!/usr/bin/env python
 # src/novel_generation_crew/main.py
 import os
@@ -62,8 +9,6 @@ from crewai.flow.flow import Flow, listen, start
 from pydantic import BaseModel, Field
 from .crews.novel_outline_crew.novel_outline_crew import NovelOutlineCrew
 from .crews.chapter_writer_crew.chapter_writer_crew import ChapterWriterCrew
-# from ai_novel_flow_1.crews.novel_outline_crew.novel_outline_crew import NovelOutlineCrew
-# from ai_novel_flow_1.crews.chapter_writer_crew.chapter_writer_crew import ChapterWriterCrew
 from .types import NovelOutline, ChapterOutline, Chapter, Novel
 
 class NovelGenerationState(BaseModel):
@@ -145,6 +90,10 @@ class NovelGenerationFlow(Flow[NovelGenerationState]):
         # 保存大纲到文件
         outline_path = f"output/{self.state.novel_type}_小说_{self.state.current_novel}_大纲.json"
         with open(outline_path, "w", encoding="utf-8") as f:
+            # novel_outline.model_dump()将Pydantic 模型对象转换为字典
+            # json.dumps() - 将字典转换为 JSON 字符串
+            # ensure_ascii=False - 确保中文字符不被转义为 Unicode 编码
+            # indent=2 - 设置 JSON 缩进，使文件更易读
             f.write(json.dumps(novel_outline.model_dump(), ensure_ascii=False, indent=2))
         
         print(f"大纲已保存至: {outline_path}")
@@ -155,9 +104,8 @@ class NovelGenerationFlow(Flow[NovelGenerationState]):
     async def generate_chapters(self, novel_outline: NovelOutline):
         """生成小说章节"""
         print(f"开始生成《{novel_outline.title}》的章节...")
-        
-        # 创建任务列表
-        # tasks = []
+
+        # 当前小说索引，即第几本小说
         self.state.current_novel_index = len(self.state.novel_outlines) - 1
         self.state.current_chapters = []
         
