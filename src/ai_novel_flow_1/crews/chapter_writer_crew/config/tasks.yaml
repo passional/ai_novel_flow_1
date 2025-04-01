@@ -1,0 +1,45 @@
+# src/novel_generation_crew/crews/chapter_writer_crew/config/tasks.yaml
+write_chapter:
+  description: >
+    根据以下信息，创作一个精彩的爽文小说章节：
+    
+    小说标题: {novel_title}
+    章节标题: {chapter_title}
+    章节内容描述: {chapter_description}
+    
+    请注意以下要点：
+    1. 章节字数控制在{chapter_words}字左右
+    2. 保持爽文风格：情节紧凑、冲突鲜明、快节奏、痛快淋漓
+    3. 人物塑造要符合角色设定
+    4. 情节推进要符合章节大纲
+    5. 确保与前文内容保持连贯性
+    
+    完整小说大纲参考：
+    {novel_outline}
+    
+    已完成章节内容参考（如有）：
+    {previous_chapters}
+  expected_output: >
+    一个完整的爽文小说章节，字数大约{chapter_words}字，风格鲜明，情节连贯，符合爽文特色。
+  agent: chapter_writer
+
+review_and_polish:
+  description: >
+    审核并润色章节内容，确保质量和一致性。请注意检查：
+    
+    1. 文风是否符合爽文特色
+    2. 人物塑造是否一致
+    3. 情节是否连贯合理
+    4. 是否存在逻辑漏洞
+    5. 语言表达是否生动有力
+    6. 章节结尾是否能够吸引读者继续阅读
+    7. 字数是否符合要求（约{chapter_words}字）
+    
+    章节标题: {chapter_title}
+    章节内容描述: {chapter_description}
+    
+    请保持原文的爽文风格，在提升质量的同时不要削弱爽感。
+  expected_output: >
+    润色后的完整章节内容，保持原有爽文风格和特色，修正问题，提升整体阅读体验。
+  agent: chapter_editor
+  context: [write_chapter]
