@@ -1,9 +1,10 @@
 # src/novel_generation_crew/crews/novel_outline_crew/config/tasks.yaml
 design_story:
   description: >
-    根据小说类型"{novel_type}"，设计一个引人入胜的爽文故事框架。故事应包含明确的主要冲突、
-    情感线索和转折点。确保故事符合爽文特点：主角逆袭、恩怨分明、痛快淋漓的爽感等。
-    
+    根据小说类型"{novel_type}"，认真分析提供的参考爆款小说"{reference_novels}",设计一个引人入胜的爽文故事框架。
+    故事应包含明确的主要冲突、情感线索和转折点。确保故事符合爽文特点：主角逆袭、恩怨分明、痛快淋漓的爽感等。
+    你的每一个设计方案都会立足于多部成功作品的分析，但绝不会简单复制它们的情节。
+
     故事应当包含:
     1. 故事背景设定
     2. 主要冲突和矛盾
@@ -22,8 +23,7 @@ design_characters:
   expected_output: >
     一份详细的角色设计文档，包括主角、反派和重要配角的背景、性格、动机和能力。
   agent: character_designer
-  context:
-    - design_story
+  context: [design_story]
 
 create_novel_outline:
   description: >
@@ -35,6 +35,4 @@ create_novel_outline:
   expected_output: >
     一份完整的小说大纲，包含小说标题和{chapter_count}个章节的详细规划。每个章节包括标题和内容描述。
   agent: outline_creator
-  context:
-    - design_story
-    - design_characters
+  context: [design_story,design_characters]

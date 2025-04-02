@@ -10,6 +10,7 @@ from pydantic import BaseModel, Field
 from .crews.novel_outline_crew.novel_outline_crew import NovelOutlineCrew
 from .crews.chapter_writer_crew.chapter_writer_crew import ChapterWriterCrew
 from .types import NovelOutline, ChapterOutline, Chapter, Novel
+from .data.reference_novels import get_reference_novels
 
 class NovelGenerationState(BaseModel):
     """小说生成状态"""
@@ -71,12 +72,16 @@ class NovelGenerationFlow(Flow[NovelGenerationState]):
         """生成小说大纲"""
         print("正在生成小说大纲...")
         
+        # 获取参考小说
+        reference_novels = get_reference_novels(self.state.novel_type)
+        
         # 创建小说大纲
         result = NovelOutlineCrew().crew().kickoff(
             inputs={
                 "novel_type": self.state.novel_type,
                 "chapter_count": self.state.chapter_count,
-                "chapter_words": self.state.chapter_words
+                "chapter_words": self.state.chapter_words,
+                "reference_novels": reference_novels,
             }
         )
         # 
